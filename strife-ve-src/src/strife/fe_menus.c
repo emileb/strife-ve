@@ -81,9 +81,11 @@ femenu_t mainMenu =
 static femenuitem_t optionsMenuMainItems[] =
 {
     { FE_MITEM_CMD, "Gameplay", "gameplay", FE_FONT_BIG },
+#ifndef __MOBILE__
     { FE_MITEM_CMD, "Keyboard", "keyboard", FE_FONT_BIG },
     { FE_MITEM_CMD, "Mouse",    "mouse",    FE_FONT_BIG },
     { FE_MITEM_CMD, "Gamepad",  "gamepad",  FE_FONT_BIG },
+#endif
     { FE_MITEM_CMD, "Graphics", "graphics", FE_FONT_BIG },
     { FE_MITEM_CMD, "Audio",    "audio",    FE_FONT_BIG },
     { FE_MITEM_CMD, "About",    "about",    FE_FONT_BIG },
@@ -507,7 +509,9 @@ static femenuitem_t optionsGraphicsItems[] =
     { FE_MITEM_CMD, "Basic Settings", "gfxbasic",    FE_FONT_BIG },
     { FE_MITEM_CMD, "Lights",         "gfxlights",   FE_FONT_BIG },
     { FE_MITEM_CMD, "Sprites",        "gfxsprites",  FE_FONT_BIG },
+#ifndef __MOBILE__
     { FE_MITEM_CMD, "Advanced",       "gfxadvanced", FE_FONT_BIG },
+#endif
     { FE_MITEM_END }
 };
 
@@ -667,7 +671,9 @@ static femenuitem_t optionsAudioItems[] =
     { FE_MITEM_SLIDER, "Sfx Volume",   "sfx_volume"      },
     { FE_MITEM_SLIDER, "Voice Volume", "voice_volume"    },
     { FE_MITEM_SLIDER, "Music Volume", "music_volume"    },
+#ifndef __MOBILE__
     { FE_MITEM_VALUES, "Music Type",   "snd_musicdevice" },
+#endif
     { FE_MITEM_MUSIC,  "Music Test",   "fe_musicnum"     },
     { FE_MITEM_END, "", "" }
 };

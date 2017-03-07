@@ -16,9 +16,111 @@
 #ifndef __DGL_H__
 #define __DGL_H__
 
+#ifdef USE_GLES
+
+#include <SDL.h>
+#include "doomtype.h"
+#include <GLES/gl.h>
+#include <GLES/glext.h>
+
+#define dglViewport(x, y, width, height) glViewport(x, y, width, height)
+#define dglOrthof glOrthof
+#define dglMatrixMode(mode) glMatrixMode(mode)
+#define dglBegin(mode) glBegin(mode)
+#define dglEnd() glEnd()
+#define dglEnable(cap) glEnable(cap)
+#define dglDisable(cap) glDisable(cap)
+#define dglLoadIdentity() glLoadIdentity()
+#define dglLoadIdentity() glLoadIdentity()
+#define dglLoadMatrixf(m) glLoadMatrixf(m)
+#define dglClear(mask) glClear(mask)
+#define dglAlphaFunc(func, ref) glAlphaFunc(func, ref)
+#define dglDepthFunc(func) glDepthFunc(func)
+#define dglDepthMask(flag) glDepthMask(flag)
+#define dglCullFace(mode) glCullFace(mode)
+#define dglColorMask(red, green, blue, alpha) glColorMask(red, green, blue, alpha)
+#define dglActiveTextureARB(texture) glActiveTexture(texture)
+#define dglScissor(x, y, width, height) glScissor(x, y, width, height)
+#define dglGetFloatv(pname, params) glGetFloatv(pname, params)
+#define dglClearDepth(depth) glClearDepth(depth)
+#define dglClearStencil(s) glClearStencil(s)
+#define dglClearColor(red, green, blue, alpha) glClearColor(red, green, blue, alpha)
+#define dglHint(target, mode) glHint(target, mode)
+#define dglFogi(pname, param) glFogi(pname, param)
+#define dglTexGeni(coord, pname, param) glTexGeni(coord, pname, param)
+#define dglEnableClientState(array) glEnableClientState(array)
+#define dglFinish() glFinish()
+#define dglBlendFunc(sfactor, dfactor) glBlendFunc(sfactor, dfactor)
+#define dglVertex3f(x, y, z) glVertex3f(x, y, z)
+#define dglColor4ub(red, green, blue, alpha) glColor4ub(red, green, blue, alpha)
+#define dglTexCoord2f(s, t) glTexCoord2f(s, t)
+#define dglVertex2f(x, y) glVertex2f(x, y)
+#define dglBindTexture(target, texture) glBindTexture(target, texture)
+#define dglGenTextures(n, textures) glGenTextures(n, textures)
+#define dglDeleteTextures(n, textures) glDeleteTextures(n, textures)
+#define dglCopyTexImage2D(target, level, internalFormat, x, y, width, height, border) glCopyTexImage2D(target, level, internalFormat, x, y, width, height, border)
+#define dglTexParameteri(target, pname, param) glTexParameteri(target, pname, param)
+#define dglGetString(name)  glGetString(name)
+#define dglGetIntegerv(pname, params) glGetIntegerv(pname, params)
+#define dglReadBuffer(mode) glReadBuffer(mode)
+#define dglDrawBuffer(mode) glDrawBuffer(mode)
+#define dglTexImage2D(target, level, internalformat, width, height, border, format, type, pixels) glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels)
+#define dglColor3f(red, green, blue) glColor3f(red, green, blue)
+#define dglTexParameterf(target, pname, param) glTexParameterf(target, pname, param)
+#define dglVertex3fv(v) glVertex3fv(v)
+#define dglColor4ubv(v) glColor4ubv(v)
+#define dglTexCoord2fv(v) glTexCoord2fv(v)
+#define dglTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels) glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels)
+#define dglPushMatrix() glPushMatrix()
+#define dglPopMatrix() glPopMatrix()
+#define dglTexCoordPointer(size, type, stride, pointer) glTexCoordPointer(size, type, stride, pointer)
+#define dglVertexPointer(size, type, stride, pointer) glVertexPointer(size, type, stride, pointer)
+#define dglColorPointer(size, type, stride, pointer) glColorPointer(size, type, stride, pointer)
+#define dglDrawElements(mode, count, type, indices) glDrawElements(mode, count, type, indices)
+#define dglPolygonMode(face, mode) glPolygonMode(face, mode)
+#define dglFlush() glFlush()
+#define dglReadPixels(x, y, width, height, format, type, pixels) glReadPixels(x, y, width, height, format, type, pixels)
+#define dglBindFramebuffer(target, framebuffer) glBindFramebuffer(target, framebuffer)
+#define dglTranslatef(x, y, z) glTranslatef(x, y, z)
+#define dglRotatef(angle, x, y, z) glRotatef(angle, x, y, z)
+#define dglPolygonOffset(factor, units) glPolygonOffset(factor, units)
+#define dglPixelStorei(pname, param) glPixelStorei(pname, param)
+#define dglShadeModel(mode) glShadeModel(mode)
+#define dglClientActiveTextureARB(texture) glClientActiveTexture(texture)
+#define dglDisableClientState(array) glDisableClientState(array)
+
+static boolean has_GL_ARB_shader_objects = false;
+static boolean has_GL_ARB_framebuffer_object = false;
+static boolean has_GL_EXT_texture_filter_anisotropic = false;
+static boolean has_GL_ARB_texture_non_power_of_two = false;
+
+#include "jwzgles/jwzgles.h"
+
+#define GL_TEXTURE0_ARB GL_TEXTURE0
+#define GL_CLAMP_TO_BORDER GL_CLAMP_TO_EDGE
+#define GL_RGB8 GL_RGB
+#define GL_RGBA8 GL_RGBA
+
+#define GL_FRAMEBUFFER_EXT                0x8D40
+#define GL_MAX_COLOR_ATTACHMENTS_EXT      0x8CDF
+#define GL_MAX_TEXTURE_IMAGE_UNITS        0x8872
+#define GL_MIRRORED_REPEAT                0x8370
+
+#define GL_DEPTH_COMPONENT 0
+#define GL_TEXTURE_COMPARE_MODE 0
+
+#define GL_NONE					0x0
+
+extern int android_screen_width;
+extern int android_screen_height;
+
+
+#else
+
 #include <SDL.h>
 #include "SDL_opengl.h"
 #include "doomtype.h"
+
 
 //#define LOG_GLFUNC_CALLS
 //#define USE_DEBUG_GLFUNCS
@@ -5921,5 +6023,8 @@ has_GL_EXT_texture_array = GL_CheckExtension("GL_EXT_texture_array");
 #ifdef __cplusplus
 }
 #endif
+
+
+#endif //USEG_GLES2
 
 #endif // __DGL_H__

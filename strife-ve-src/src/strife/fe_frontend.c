@@ -658,6 +658,11 @@ static boolean FE_MouseInValueRect(Uint32 mx, Uint32 my, femenuitem_t *item)
 //
 static void FE_TransformCoordinates(Uint16 mx, Uint16 my, Uint32 *sx, Uint32 *sy)
 {
+#ifdef __MOBILE__ // Already 320x200
+    *sx = mx;
+    *sy = my;
+    return;
+#endif
     SDL_Surface *display = SDL_GetVideoSurface();
     int w = display->w;
     int h = display->h;
@@ -944,6 +949,10 @@ static void FE_HandleJoyAxes(void)
     }
 }
 
+#ifdef __MOBILE__
+void I_GetAbsoluteMousePositionAndroid(int *x, int *y);
+#endif
+
 //
 // Handle events for the frontend.
 //
@@ -990,6 +999,16 @@ static void FE_Responder(void)
             FE_HandleKey(&ev);
             break;
         case SDL_MOUSEBUTTONDOWN:
+        #ifdef __MOBILE__
+        {
+            int x,y;
+            I_GetAbsoluteMousePositionAndroid(&x,&y);
+
+             ev.motion.x = x;
+             ev.motion.y = y;
+             FE_HandleMouseMotion(&ev);
+         }
+        #endif
             i_seemouses = true;
             i_seejoysticks = false;
             if(frontend_state == FE_STATE_MBINPUT)

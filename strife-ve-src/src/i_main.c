@@ -141,7 +141,13 @@ void I_W32_DebugConsole(void);
 #if defined(__APPLE__)
 int I_Main(int argc, char **argv)
 #else
+
+#ifdef __ANDROID__
+int main_android(int argc, char **argv)
+#else
 int main(int argc, char **argv)
+#endif
+
 #endif
 {
     // save arguments

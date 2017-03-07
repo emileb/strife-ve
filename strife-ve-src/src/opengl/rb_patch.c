@@ -69,8 +69,11 @@ void RB_PatchBufferInit(void)
     patchTexture.origheight = SCREENHEIGHT;
     
     patchTexture.width = RB_RoundPowerOfTwo(patchTexture.origwidth);
+#ifdef USE_GLES
+    patchTexture.height =RB_RoundPowerOfTwo(patchTexture.origheight);
+#else
     patchTexture.height = patchTexture.origheight;
-    
+#endif    
     patchBuffer = (byte*)Z_Calloc(1, (patchTexture.width * patchTexture.height) * 4, PU_STATIC, 0);
     RB_UploadTexture(&patchTexture, patchBuffer, TC_CLAMP_BORDER, TF_NEAREST);
     
@@ -151,7 +154,7 @@ void RB_BlitBlock(int x, int y, int width, int height, byte *data, byte alpha)
 void RB_DrawPatchBuffer(void)
 {
     vtx_t v[4];
-    float tx;
+    float tx, ty;
     
     RB_SetOrtho();
     
@@ -160,7 +163,8 @@ void RB_DrawPatchBuffer(void)
     RB_ChangeTexParameters(&patchTexture, TC_REPEAT, TEXFILTER);
     
     tx = (float)patchTexture.origwidth / (float)patchTexture.width;
-    
+    ty = (float)patchTexture.origheight / (float)patchTexture.height;
+
     RB_SetVertexColor(v, 0xff, 0xff, 0xff, 0xff, 4);
     v[0].z = v[1].z = v[2].z = v[3].z = 0;
     
@@ -170,7 +174,7 @@ void RB_DrawPatchBuffer(void)
     v[0].tu = v[2].tu = 0;
     v[0].tv = v[1].tv = 0;
     v[1].tu = v[3].tu = tx;
-    v[2].tv = v[3].tv = 1;
+    v[2].tv = v[3].tv = ty;
     
     RB_SetState(GLSTATE_CULL, true);
     RB_SetCull(GLCULL_FRONT);

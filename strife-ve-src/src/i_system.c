@@ -366,6 +366,11 @@ void I_Error (char *error, ...)
     // Message first.
     va_start(argptr, error);
     //fprintf(stderr, "\nError: ");
+#ifdef __ANDROID__
+    char string[512];
+    vsprintf(string, error, argptr);
+    LOGI("%s",string);
+#endif
     vfprintf(stderr, error, argptr);
     fprintf(stderr, "\n\n");
     va_end(argptr);

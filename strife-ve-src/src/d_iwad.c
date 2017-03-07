@@ -658,7 +658,13 @@ static void BuildIWADDirList(void)
 
 char *D_FindWADByName(char *name)
 {
+#ifdef __MOBILE__
+    // We have the wads in the APK, they are all present
+    return name;
+#endif
+
     static qstring_t buffer;
+
     char *path;
     int i;
 

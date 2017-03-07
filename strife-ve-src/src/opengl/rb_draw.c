@@ -234,7 +234,7 @@ void RB_InitDrawer(void)
 
     w = SDL_GetVideoSurface()->w;
     h = SDL_GetVideoSurface()->h;
-
+#ifdef HAS_FBO
     FBO_InitColorAttachment(&spriteFBO, 0, w, h);
     FBO_InitColorAttachment(&fxaaFBO, 0, w, h);
     FBO_InitColorAttachment(&bloomFBO, 0, w, h);
@@ -242,12 +242,14 @@ void RB_InitDrawer(void)
 
     FBO_InitColorAttachment(&blurFBO[0], 0, w >> 1, h >> 1);
     FBO_InitColorAttachment(&blurFBO[1], 0, w >> 3, h >> 3);
+#endif
 
+#ifdef HAS_SHADER
     SP_LoadProgram(&motionBlurShader, "MBLUR");
     SP_LoadProgram(&fxaaShader, "FXAA");
     SP_LoadProgram(&blurShader, "BLUR");
     SP_LoadProgram(&bloomShader, "BLOOM");
-
+#endif
     bShowLightCells = M_CheckParm("-showlightcells");
 }
 
@@ -257,15 +259,19 @@ void RB_InitDrawer(void)
 
 void RB_ShutdownDrawer(void)
 {
+#ifdef HAS_SHADER
     SP_Delete(&fxaaShader);
     SP_Delete(&blurShader);
     SP_Delete(&bloomShader);
     SP_Delete(&motionBlurShader);
+#endif
 
+#ifdef HAS_FBO
     FBO_Delete(&spriteFBO);
     FBO_Delete(&blurFBO[0]);
     FBO_Delete(&blurFBO[1]);
     FBO_Delete(&bloomFBO);
+#endif
 
     RB_DeleteTexture(&whiteTexture);
     RB_DeleteTexture(&lightPointTexture);
@@ -401,8 +407,9 @@ void RB_DrawTextureForName(const char *pic, const float x, const float y,
 
 void RB_DrawScreenTexture(rbTexture_t *texture, const int width, const int height)
 {
+    LOGI("RB_DrawScreenTexture");
     vtx_t v[4];
-    float tx;
+    float tx,ty;
     int i;
     SDL_Surface *screen;
     int wi, hi, ws, hs;
@@ -417,6 +424,7 @@ void RB_DrawScreenTexture(rbTexture_t *texture, const int width, const int heigh
     hs = screen->h;
 
     tx = (float)texture->origwidth / (float)texture->width;
+    ty = (float)texture->origheight / (float)texture->height;
 
     for(i = 0; i < 4; ++i)
     {
@@ -458,7 +466,7 @@ void RB_DrawScreenTexture(rbTexture_t *texture, const int width, const int heigh
     v[0].tu = v[2].tu = 0;
     v[0].tv = v[1].tv = 0;
     v[1].tu = v[3].tu = tx;
-    v[2].tv = v[3].tv = 1;
+    v[2].tv = v[3].tv = ty;
 
     RB_SetState(GLSTATE_CULL, true);
     RB_SetCull(GLCULL_FRONT);
@@ -477,6 +485,7 @@ void RB_DrawScreenTexture(rbTexture_t *texture, const int width, const int heigh
 
 void RB_DrawStretchPic(const char *pic, const float x, const float y, const int width, const int height)
 {
+    LOGI("RB_DrawStretchPic");
     rbTexture_t *texture;
     vtx_t v[4];
     
@@ -516,6 +525,7 @@ void RB_DrawStretchPic(const char *pic, const float x, const float y, const int 
 
 void RB_DrawMouseCursor(const int x, const int y)
 {
+#ifndef __MOBILE__
     vtx_t v[4];
     float scale;
     float yscale;
@@ -565,6 +575,7 @@ void RB_DrawMouseCursor(const int x, const int y)
 
     // pop modelview matrix
     dglPopMatrix();
+#endif
 }
 
 //
@@ -587,7 +598,9 @@ void RB_BindDrawPointers(vtx_t *vtx)
 
     if(prevpointer == vtx)
     {
+#ifndef __MOBILE__
         return;
+#endif
     }
 
     prevpointer = vtx;

@@ -796,8 +796,18 @@ static void UpdateShiftStatus(SDL_Event *event)
 //
 // haleyjd 20141004: [SVE] Get true mouse position
 //
+
+#ifdef __MOBILE__
+void I_GetAbsoluteMousePositionAndroid(int *x, int *y);
+#endif
+
 void I_GetAbsoluteMousePosition(int *x, int *y)
 {
+#ifdef __MOBILE__
+I_GetAbsoluteMousePositionAndroid(x,y);
+return;
+#endif
+
     SDL_Surface *display = SDL_GetVideoSurface();
     int w = display->w;
     int h = display->h;
@@ -992,11 +1002,7 @@ static void CenterMouse(void)
     // Clear any relative movement caused by warping
 
     SDL_PumpEvents();
-#if SDL_VERSION_ATLEAST(1, 3, 0)
-    SDL_GetRelativeMouseState(0, NULL, NULL);
-#else
     SDL_GetRelativeMouseState(NULL, NULL);
-#endif
 }
 
 //
@@ -1012,26 +1018,8 @@ static void I_ReadMouse(void)
     int x, y;
     event_t ev;
 
-    // if the app services overlay would filter out mouse motion events,
-    // then do not read the raw mouse position here either.
-    if(gAppServices->OverlayEventFilter(SDL_MOUSEMOTION))
-    {
-        did_filter = true;
-        return;
-    }
-    else if(did_filter)
-    {
-        // we need to warp the mouse if the condition above was true and 
-        // then stops being so.
-        CenterMouse();
-        did_filter = false;
-    }
-
-#if SDL_VERSION_ATLEAST(1, 3, 0)
-    SDL_GetRelativeMouseState(0, &x, &y);
-#else
     SDL_GetRelativeMouseState(&x, &y);
-#endif
+
 
     // [SVE] svillarreal
     if(mouse_scale > 4) mouse_scale = 4;
@@ -1106,6 +1094,12 @@ void I_StartTic (void)
 
         I_UpdateJoystick();
     }
+
+    #ifdef __MOBILE__
+        extern void I_UpdateAndroid(void);
+        I_UpdateAndroid();
+    #endif
+
 }
 
 

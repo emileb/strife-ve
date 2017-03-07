@@ -575,9 +575,18 @@ void M_ReadSaveStrings(void)
         handle = fopen(fname, "rb");
         if(handle == NULL)
         {
+#ifdef __MOBILE__ //Don't enter name for now
+            char text[20];
+            sprintf(text, "--Unused--",i);
+            M_StringCopy(savegamestrings[i], text,
+                                 sizeof(savegamestrings[i]));
+
+            LoadMenu[i].status = 0;
+#else
             M_StringCopy(savegamestrings[i], EMPTYSTRING,
                          sizeof(savegamestrings[i]));
             LoadMenu[i].status = 0;
+#endif
             continue;
         }
         fread(savegamestrings[i], 1, SAVESTRINGSIZE, handle);
@@ -598,8 +607,11 @@ void M_ReadSaveStrings(void)
 void M_DrawNameChar(void)
 {
     int i;
-
+#ifdef __MOBILE__
+    M_WriteText(72, 28, DEH_String("Select Slot"));
+#else
     M_WriteText(72, 28, DEH_String("Name Your Character"));
+#endif
 
     for (i = 0;i < load_end; i++)
     {
@@ -635,6 +647,18 @@ void M_DoNameChar(int choice)
         namingCharacter = false;
     sendsave = 1;
     ClearTmp();
+
+#ifdef __MOBILE__
+    char text[100];
+    time_t now = time(NULL);
+    struct tm *t = localtime(&now);
+
+    strftime(text, sizeof(text)-1, "%d %m %Y %H:%M", t);
+
+    M_StringCopy(savegamestrings[choice], text,
+                                     sizeof(savegamestrings[choice]));
+#endif
+
     G_WriteSaveName(choice, savegamestrings[choice]);
     quickSaveSlot = choice;  
     SaveDef.lastOn = choice;
@@ -773,6 +797,16 @@ void M_DoSave(int slot)
     if(slot >= 0)
     {
         sendsave = 1;
+#ifdef __MOBILE__
+        char text[100];
+        time_t now = time(NULL);
+        struct tm *t = localtime(&now);
+
+        strftime(text, sizeof(text)-1, "%d %m %Y %H:%M", t);
+
+        M_StringCopy(savegamestrings[slot], text,
+                                         sizeof(savegamestrings[slot]));
+#endif
         G_WriteSaveName(slot, savegamestrings[slot]);
         M_ClearMenus(0);
         quickSaveSlot = slot;        

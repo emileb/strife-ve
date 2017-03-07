@@ -959,6 +959,9 @@ static void I_SDL_ShutdownSound(void)
 
 static int GetSliceSize(void)
 {
+#ifdef __ANDROID__
+    return 1024 * 4;
+#endif
     int limit;
     int n;
 

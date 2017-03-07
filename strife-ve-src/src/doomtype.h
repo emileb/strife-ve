@@ -24,9 +24,11 @@
 
 // [SVE] svillarreal - disable annoying compiler warnings
 
+#ifndef __arm__
 #pragma warning (disable : 4018) // signed/unsigned mismatch warnings
 #pragma warning (disable : 4244) // conversion #x to #y: possible loss of data
 #pragma warning (disable : 4305) // truncation from #x to #y
+#endif
 
 // #define macros to provide functions missing in Windows.
 // Outside Windows, we use strings.h for str[n]casecmp.

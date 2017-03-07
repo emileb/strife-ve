@@ -1013,7 +1013,8 @@ FF_ENABLE_DEPRECATION_WARNINGS
                    reqHeight);
     
     currentPts = av_gettime();
-    frameTime = 1000.0 / av_q2d(videoCodecCtx->framerate);
+//    frameTime = 1000.0 / av_q2d(videoCodecCtx->framerate);
+    frameTime = 25; //EMILE
     lastFrameTime = frameTime;
     return true;
 }
@@ -1181,7 +1182,7 @@ void I_AVStartVideoStream(const char *filename)
         return;
     }
     
-    thread = SDL_CreateThread(I_AVIteratePacketsThread, NULL);
+    thread = SDL_CreateThread(I_AVIteratePacketsThread, "ffmpeg", NULL);
 
     I_SetShowCursor(false);
 

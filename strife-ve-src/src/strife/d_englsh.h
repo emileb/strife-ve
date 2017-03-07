@@ -34,10 +34,22 @@
 //
 //	M_Menu.C
 //
+#ifdef __MOBILE__
+
+#define PRESSKEY 	""
+#define PRESSGPB        ""
+#define PRESSYN 	""
+#define PRESSGPCC       ""
+
+#else
+
 #define PRESSKEY 	"press a key."
 #define PRESSGPB        "press a button."
 #define PRESSYN 	"press y or n."
 #define PRESSGPCC       "press confirm or cancel."
+
+#endif
+
 #define QUITMSG	"are you sure you want to\nquit this great game?"
 // [STRIFE] modified:
 #define LOADNET 	"you can't load while in a net game!\n\n" PRESSKEY

@@ -2515,6 +2515,18 @@ static void MoveOldCfgDir(void)
 
 static char *GetDefaultConfigDir(void)
 {
+#ifdef __ANDROID__
+    char *homedir;
+    char *result;
+    homedir = getenv("HOME");
+
+    // put all configuration in a config directory off the
+    // homedir
+    result = M_StringJoin(homedir, DIR_SEPARATOR_S,
+                          PACKAGE_TARNAME, DIR_SEPARATOR_S, NULL);
+    return result;
+#endif
+
     // [SVE] dotfloat 20141216
 #if !defined(_WIN32)
     char *datadir = NULL;

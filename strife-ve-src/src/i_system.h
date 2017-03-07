@@ -23,6 +23,10 @@
 #include "d_ticcmd.h"
 #include "d_event.h"
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#define LOGTEST(...) ((void)__android_log_print(ANDROID_LOG_INFO,"JNI", __VA_ARGS__))
+#endif
 
 typedef void (*atexit_func_t)(void);
 

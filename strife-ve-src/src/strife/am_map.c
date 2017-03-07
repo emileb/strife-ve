@@ -894,7 +894,9 @@ void AM_updateLightLev(void)
     }
 }
 
-
+#ifdef __MOBILE__
+extern void Android_AM_controls(double *zoom, double *pan_x, double *pan_y);
+#endif
 //
 // Updates on Game Tick
 //
@@ -908,14 +910,54 @@ void AM_Ticker (void)
     if (followplayer)
         AM_doFollowPlayer();
 
+#ifdef __MOBILE__
+    double pan_x = 0;
+    double pan_y = 0;
+    double zoom = 0;
+
+	Android_AM_controls(&zoom,&pan_x,&pan_y);
+	  //  pan_x = 0;
+      //  pan_y = 0;
+    // We want to pan less wne zoomed in so it feels right. 2500 seems to work
+    double panScale = (double)2500 / (double)scale_mtof;
+
+	m_paninc.x = pan_x * (uint64_t)500000000 * panScale;
+	m_paninc.y = pan_y * (uint64_t)400000000 * panScale;
+
+    //LOGTEST("x = %d, y = %d",m_paninc.x,m_paninc.y);
+	zoom = zoom * 2;
+
+	if( zoom > 0 )
+	{
+	    ftom_zoommul =  ((int) (FRACUNIT/ (1 + zoom)));
+        mtof_zoommul =  ((int) ( (1 + zoom)*FRACUNIT));
+        //mtof_zoommul = M_ZOOMOUT;
+        //ftom_zoommul = M_ZOOMIN;
+	}
+	else if ( zoom < 0 )
+	{
+	   mtof_zoommul =  ((int) (FRACUNIT/ (1 + -zoom)));
+       ftom_zoommul =  ((int) ( (1 + -zoom)*FRACUNIT));
+      // mtof_zoommul = M_ZOOMIN;
+      // ftom_zoommul = M_ZOOMOUT;
+	}
+
+#endif
+
     // Change the zoom if necessary
     if (ftom_zoommul != FRACUNIT)
         AM_changeWindowScale();
+
 
     // Change x,y location
     if (m_paninc.x || m_paninc.y)
         AM_changeWindowLoc();
 
+#ifdef __MOBILE__
+    m_paninc.x = m_paninc.y = 0;
+    mtof_zoommul = FRACUNIT;
+    ftom_zoommul = FRACUNIT;
+#endif
     // Update light level
     // AM_updateLightLev();
 }

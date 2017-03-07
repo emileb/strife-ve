@@ -36,7 +36,12 @@
 
 rbView_t rbPlayerView;
 
+#ifdef USE_GLES // stop z-fighting on Tegra devices with 15bit depth buffer.
+#define Z_NEAR          1.0f //This value seems OK,
+#else
 #define Z_NEAR          0.1f
+#endif
+
 #define FIXED_ASPECT    1.2f
 
 //
@@ -175,8 +180,11 @@ static void RB_SetupView(player_t *player, rbView_t *view, const float fov)
     {
         SDL_Surface *screen = SDL_GetVideoSurface();
         float delta = (float)screen->h / ((float)SCREENHEIGHT / 16.0f);
-
+#ifdef __MOBILE__
+        dglViewport(0, delta, android_screen_width, android_screen_height);
+#else
         dglViewport(0, delta, screen->w, screen->h);
+#endif
     }
 
     view->x = FIXED2FLOAT(viewx);

@@ -54,7 +54,12 @@ static void RB_SetupAutomapView(rbView_t *view)
     float px, py;
     float fscale;
 
-    dglViewport(0, delta, screen->w, screen->h);
+   
+#ifdef __MOBILE__
+    dglViewport(0, delta, android_screen_width, android_screen_height);
+#else
+ 	dglViewport(0, delta, screen->w, screen->h);
+#endif
 
     fscale = FIXED2FLOAT(scale_ftom);
 
@@ -440,6 +445,7 @@ void RB_BeginAutomapDraw(void)
     RB_ClearBuffer(GLCB_ALL);
     RB_SetupAutomapView(&rbAutomapView);
 
+dglLoadIdentity(); //emile
     // load projection
     dglMatrixMode(GL_PROJECTION);
     dglLoadMatrixf(rbAutomapView.projection);

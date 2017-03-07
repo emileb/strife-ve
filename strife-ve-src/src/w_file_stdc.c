@@ -22,6 +22,11 @@
 #include "w_file.h"
 #include "z_zone.h"
 
+#ifdef __ANDROID__
+//#include "AssetFileAccess.h"
+//#include "android_fopen.h"
+#endif
+
 typedef struct
 {
     wad_file_t wad;
@@ -32,10 +37,27 @@ extern wad_file_class_t stdc_wad_file;
 
 static wad_file_t *W_StdC_OpenFile(char *path)
 {
+#ifdef __ANDROIDxx__
+    int fileHandle = assetFopen(path, "");
+   // int fileHandle = android_fopen(path, "");
+    if( fileHandle == -1 )
+        return NULL;
+
+
+    stdc_wad_file_t *result;
+    result = Z_Malloc(sizeof(stdc_wad_file_t), PU_STATIC, 0);
+    result->wad.file_class = &stdc_wad_file;
+    result->wad.mapped = NULL;
+    result->wad.length = assetFlen(fileHandle);
+    result->fstream = fileHandle;
+
+    return &result->wad;
+#else
     stdc_wad_file_t *result;
     FILE *fstream;
 
-    fstream = fopen(path, "rb");
+    //fstream = fopen(path, "rb");
+    fstream = android_fopen(path, "rb");
 
     if (fstream == NULL)
     {
@@ -51,16 +73,22 @@ static wad_file_t *W_StdC_OpenFile(char *path)
     result->fstream = fstream;
 
     return &result->wad;
+
+#endif
 }
 
 static void W_StdC_CloseFile(wad_file_t *wad)
 {
+#ifdef __ANDROIDxxx__
+
+#else
     stdc_wad_file_t *stdc_wad;
 
     stdc_wad = (stdc_wad_file_t *) wad;
 
     fclose(stdc_wad->fstream);
     Z_Free(stdc_wad);
+#endif
 }
 
 // Read data from the specified position in the file into the 

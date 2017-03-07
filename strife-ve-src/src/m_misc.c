@@ -130,6 +130,9 @@ boolean M_WriteFile(char *name, void *source, int length)
 }
 
 
+#ifdef __ANDROID__ //For readin music straight from APK
+#include "android_fopen.h"
+#endif
 //
 // M_ReadFile
 //
@@ -139,8 +142,12 @@ int M_ReadFile(char *name, byte **buffer)
     FILE *handle;
     int	count, length;
     byte *buf;
-	
-    handle = fopen(name, "rb");
+#ifdef __ANDROID__ //Try and open the file from the assets folder, only used for music atm
+	handle = android_fopen(name, "rb");
+	if( !handle )
+#endif
+        handle = fopen(name, "rb");
+
     if (handle == NULL)
 	I_Error ("Couldn't read file %s", name);
 
@@ -148,7 +155,7 @@ int M_ReadFile(char *name, byte **buffer)
     // reading the current position
 
     length = M_FileLength(handle);
-    
+    LOGI("len = %d",length);
     buf = Z_Malloc (length, PU_STATIC, NULL);
     count = fread(buf, 1, length, handle);
     fclose (handle);

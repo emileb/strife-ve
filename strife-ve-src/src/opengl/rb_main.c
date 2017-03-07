@@ -150,7 +150,11 @@ void RB_InitDefaultState(void)
 
 void RB_ResetViewPort(void)
 {
+#ifdef __MOBILE__
+    dglViewport(0, 0, android_screen_width, android_screen_height);
+#else
     dglViewport(0, 0, screen->w, screen->h);
+#endif
 }
 
 //
@@ -316,8 +320,11 @@ angle_t RB_PointToBam(fixed_t x, fixed_t y)
         {
             an = 2.0f - an;
         }
-
+#ifdef __MOBILE__
+        return (angle_t)(( long long int)(an * ANG90));
+#else
         return (angle_t)(an * ANG90);
+#endif
     }
 
     return 0;
@@ -522,10 +529,10 @@ void RB_SetDepth(int func)
 {
     int pFunc = rbState.depthFunction ^ func;
     int glFunc = 0;
-    
+#ifndef __MOBILE__ 
     if(pFunc == 0)
         return; // already set
-        
+#endif
     switch(func)
     {
         case GLFUNC_EQUAL:
@@ -575,10 +582,10 @@ void RB_SetBlend(int src, int dest)
     int pBlend = (rbState.blendSrc ^ src) | (rbState.blendDest ^ dest);
     int glSrc = GL_ONE;
     int glDst = GL_ONE;
-    
+#ifndef __MOBILE__    
     if(pBlend == 0)
         return; // already set
-    
+#endif
     switch(src)
     {
         case GLSRC_ZERO:
@@ -667,10 +674,10 @@ void RB_SetCull(int type)
 {
     int pCullType = rbState.cullType ^ type;
     int cullType = 0;
-    
+#ifndef __MOBILE__    
     if(pCullType == 0)
         return; // already set
-    
+#endif    
     switch(type)
     {
         case GLCULL_FRONT:
@@ -698,10 +705,10 @@ void RB_SetDepthMask(int enable)
 {
     int pEnable = rbState.depthMask ^ enable;
     int flag = 0;
-    
+#ifndef __MOBILE__     
     if(pEnable == 0)
         return; // already set
-    
+#endif    
     switch(enable)
     {
         case 1:
@@ -728,10 +735,10 @@ void RB_SetColorMask(int enable)
 {
     int pEnable = rbState.colormask ^ enable;
     int flag = 0;
-    
+#ifndef __MOBILE__     
     if(pEnable == 0)
         return; // already set
-    
+#endif   
     switch(enable)
     {
         case 1:
@@ -786,11 +793,13 @@ void RB_SetScissorRect(const int x, const int y, const int w, const int h)
 
 void RB_DisableShaders(void)
 {
+#ifdef HAS_SHADER
     if(rbState.currentProgram != 0)
     {
         dglUseProgramObjectARB(0);
         rbState.currentProgram = 0;
     }
+#endif
 }
 
 //
@@ -800,10 +809,11 @@ void RB_DisableShaders(void)
 
 void RB_RestoreFrameBuffer(void)
 {
+#ifdef HAS_FBO
     dglBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
     RB_SetDrawBuffer(GL_BACK);
     RB_SetReadBuffer(GL_BACK);
-    
+#endif
     rbState.currentFBO = 0;
 }
 
@@ -832,8 +842,9 @@ void RB_SetReadBuffer(const GLenum state)
     {
         return; // already set
     }
-    
+#ifndef USE_GLES
     dglReadBuffer(state);
+#endif
     rbState.readBuffer = state;
 }
 

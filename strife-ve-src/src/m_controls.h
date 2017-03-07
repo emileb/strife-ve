@@ -41,6 +41,13 @@ extern int key_invleft;
 extern int key_invright;
 extern int key_useartifact;
 
+extern int key_invslot0;
+extern int key_invslot1;
+extern int key_invslot2;
+extern int key_invslot3;
+extern int key_invslot4;
+extern int key_invslot5;
+
 // villsa [STRIFE] strife keys
 extern int key_usehealth;
 extern int key_invquery;

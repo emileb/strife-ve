@@ -159,7 +159,11 @@ static boolean          st_statusbaron;
 
 // haleyjd 09/01/10: [STRIFE]
 // Whether or not a popup is currently displayed
+#ifdef __MOBILE__ //Make global so we can read it
+boolean          st_displaypopup = false;
+#else
 static boolean          st_displaypopup = false;
+#endif
 
 // villsa [STRIFE]
 static int              st_popupdisplaytics = 0;
@@ -172,10 +176,18 @@ static boolean          st_showobjective = false;
 static boolean          st_showinvpop = false;
 
 // villsa [STRIFE]
+#ifdef __MOBILE__ //Make global so we can read it
+boolean          st_showkeys = false;
+#else
 static boolean          st_showkeys = false;
+#endif
 
 // villsa [STRIFE] TODO - identify variables
+#ifdef __MOBILE__ //Make global so we can read it
+int              st_keypage = -1;
+#else
 static int              st_keypage = -1;
+#endif
 // [unused] static int              dword_88490 = 0;
 
 // haleyjd 09/19/10: [STRIFE] Cached player data
@@ -675,9 +687,11 @@ boolean ST_Responder(event_t* ev)
                 st_showkeys = netgame;
                 st_showinvpop = netgame;
                 st_keypage = -1;
-
+#ifdef __MOBILE__
+                st_popupdisplaytics = 400;
+#else
                 st_popupdisplaytics = ev->data2 ^ key_mission;
-
+#endif
                 st_showobjective = true;
             }
         }
@@ -717,7 +731,19 @@ boolean ST_Responder(event_t* ev)
         bKeyPressed = true;
         st_invtics = 50;
     }
+#ifdef __MOBILE__
+    else if ((ev->data1 >= key_invslot0) && (ev->data1 <= key_invslot5))
+    {
+        int slot = ev->data1 - key_invslot0;
+        LOGI("SLOT %d", slot);
 
+        if( slot < plyr->numinventory )
+            plyr->inventorycursor = slot;
+
+        bKeyPressed = true;
+        st_invtics = 50;
+    }
+#endif
     //
     // [STRIFE] Cheats which are allowed in netgames/demos:
     //

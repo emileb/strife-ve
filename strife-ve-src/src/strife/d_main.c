@@ -1355,6 +1355,10 @@ static void D_InitFrontend()
     {
         dofrontend = false;
     }
+#ifdef __MOBILE__
+    dofrontend = false; //EMILE
+    jwzgles_reset();
+#endif
 
     // init graphics
     I_GraphicsCheckCommandLine();
@@ -1889,6 +1893,11 @@ void D_DoomMain (void)
 
     // Find the main IWAD file and load it.
     iwadfile = D_FindIWAD(IWAD_MASK_STRIFE, &gamemission);
+
+#ifdef __MOBILE__
+    // File will not be found because it's in the APK, give it a hand
+    iwadfile = "strife1.wad";
+#endif
 
     // None found?
     if (iwadfile == NULL)

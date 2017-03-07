@@ -58,8 +58,10 @@
 // TODO: Entire file should be surrounded with a #ifdef ENABLE_OPENGL
 // so we can build without OpenGL.
 
-#include <SDL.h>
-#include "SDL_opengl.h"
+//#include <SDL.h>
+//#include "SDL_opengl.h"
+
+#include "dgl.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -235,10 +237,12 @@ static boolean CreateTextures(void)
 
 static boolean SetupFramebuffer(void)
 {
+#ifdef HAS_FBO
     // Translate scaled-up texture to the screen with linear filtering.
     // Don't wrap/repeat the texture; this stops the linear filtering
     // from blurring the edges of the screen with each other.
     FBO_InitColorAttachment(&scaled_framebuffer, 0, scaled_w, scaled_h);
+#endif
     return scaled_framebuffer.bLoaded;
 }
 
@@ -321,9 +325,10 @@ static void DrawUnscaledToScaled(void)
 {
     if(glscale_pipeline != GLSCALE_PIPELINE_FBO)
         return;
-
+#ifdef HAS_FBO
     // Render into scaled_texture through framebuffer.
     FBO_Bind(&scaled_framebuffer);
+#endif
 
     dglMatrixMode(GL_PROJECTION);
     dglLoadIdentity();
@@ -346,9 +351,10 @@ static void DrawUnscaledToScaled(void)
     {
         DrawScanlines();
     }
-
+#ifdef HAS_FBO
     // Finished with framebuffer
     FBO_UnBind(&scaled_framebuffer);
+#endif
 }
 
 // Render the scaled_texture to the screen.
@@ -363,6 +369,40 @@ static void DrawScreen(void)
     dglMatrixMode(GL_MODELVIEW);
     dglLoadIdentity();
 
+#ifdef __MOBILE__
+
+    extern  int android_screen_width;
+    extern  int android_screen_height;
+
+    glDisable(GL_BLEND);
+
+    dglViewport(0, 0,android_screen_width, android_screen_height);
+
+    dglMatrixMode(GL_PROJECTION);
+    dglLoadIdentity();
+
+    dglOrthof((GLfloat) 0,
+              (GLfloat) android_screen_width,
+              (GLfloat) android_screen_height,
+              (GLfloat) 0, 0.0, 1.0);
+
+    float smax = (320.f / 512.0f);
+    float tmax = (200.f / 256.0f);
+
+    dglBindTexture(GL_TEXTURE_2D, unscaled_texture);
+
+
+    dglBegin(GL_QUADS);
+    dglTexCoord2f(0,    0   ); dglVertex2f( 0,                    0);
+    dglTexCoord2f(smax, 0   ); dglVertex2f( android_screen_width, 0);
+    dglTexCoord2f(smax, tmax); dglVertex2f( android_screen_width, android_screen_height);
+    dglTexCoord2f(0,    tmax); dglVertex2f( 0,                    android_screen_height);
+    dglEnd();
+
+
+    RB_UnbindTexture();
+
+#else
     dglViewport(0, 0, screen_w, screen_h);
 
     w = (float) window_w / screen_w;
@@ -370,8 +410,9 @@ static void DrawScreen(void)
 
     if(glscale_pipeline == GLSCALE_PIPELINE_FBO)
     {
+#ifdef HAS_FBO
         FBO_BindImage(&scaled_framebuffer);
-
+#endif
         dglBegin(GL_QUADS);
         dglTexCoord2f(0, 0); dglVertex2f(-w,  h);
         dglTexCoord2f(1, 0); dglVertex2f( w,  h);
@@ -395,6 +436,8 @@ static void DrawScreen(void)
 
         RB_UnbindTexture();
     }
+
+#endif
 }
 
 boolean I_GL_InitScale(int w, int h)

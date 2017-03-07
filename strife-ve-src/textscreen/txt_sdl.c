@@ -412,11 +412,8 @@ void TXT_UpdateScreen(void)
 
 void TXT_GetMousePosition(int *x, int *y)
 {
-#if SDL_VERSION_ATLEAST(1, 3, 0)
-    SDL_GetMouseState(0, x, y);
-#else
     SDL_GetMouseState(x, y);
-#endif
+
 
     *x /= font->w;
     *y /= font->h;

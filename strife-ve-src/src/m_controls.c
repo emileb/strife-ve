@@ -54,6 +54,13 @@ int key_invleft = 'r';
 int key_invright = 'f';
 int key_useartifact = KEY_ENTER;
 
+int key_invslot0 = 200;
+int key_invslot1 = 201;
+int key_invslot2 = 202;
+int key_invslot3 = 203;
+int key_invslot4 = 204;
+int key_invslot5 = 205;
+
 //
 // Hexen key controls
 //
@@ -159,7 +166,12 @@ int key_menu_left      = KEY_LEFTARROW;
 int key_menu_right     = KEY_RIGHTARROW;
 int key_menu_back      = KEY_BACKSPACE;
 int key_menu_forward   = KEY_ENTER;
+#ifdef __MOBILE__
+int key_menu_confirm   = KEY_ENTER;
+#else
 int key_menu_confirm   = 'y';
+#endif
+
 int key_menu_abort     = 'n';
 
 int key_menu_help      = KEY_F1;

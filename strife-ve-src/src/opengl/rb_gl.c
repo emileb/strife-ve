@@ -86,7 +86,9 @@ boolean GL_PreInit(void)
     SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+#ifndef __MOBILE__
     SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, rbVsync ? 1 : 0);
+#endif
     return true;
 }
 
@@ -172,6 +174,7 @@ void GL_LogError(const char *message, const char *file, int line)
 
 void GL_Init(void)
 {
+#ifndef USE_GLES
     GL_ARB_multitexture_Init();
     GL_EXT_compiled_vertex_array_Init();
     GL_ARB_texture_non_power_of_two_Init();
@@ -180,5 +183,6 @@ void GL_Init(void)
     GL_EXT_texture_filter_anisotropic_Init();
     GL_ARB_vertex_buffer_object_Init();
     GL_ARB_shader_objects_Init();
-    GL_ARB_framebuffer_object_Init();
+	GL_ARB_framebuffer_object_Init();
+#endif
 }

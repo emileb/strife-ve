@@ -184,8 +184,11 @@ int OPL_Timer_StartThread(void)
     opl_timer_paused = 0;
     pause_offset = 0;
 
+#ifdef __ANDROID__
+    timer_thread = SDL_CreateThread(ThreadFunction,"OPL_thread", NULL);
+#else
     timer_thread = SDL_CreateThread(ThreadFunction, NULL);
-
+#endif
     if (timer_thread == NULL)
     {
         timer_thread_state = THREAD_STATE_STOPPED;

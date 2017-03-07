@@ -699,7 +699,24 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
  
     cmd->forwardmove += forward; 
     cmd->sidemove += side;
-    
+
+#ifdef __MOBILE__
+        extern void G_AndroidBuildTiccmd(ticcmd_t *cmd);
+        G_AndroidBuildTiccmd(cmd);
+        if (cmd->buttons2 & BT2_INVUSE)
+        {
+            // Clear it incase no inventory items
+            cmd->buttons2 & ~BT2_INVUSE;
+            player_t* player = &players[consoleplayer];
+            if(player->numinventory > 0)
+            {
+                cmd->buttons2 |= BT2_INVUSE;
+                cmd->inventory = player->inventory[player->inventorycursor].sprite;
+            }
+        }
+
+#endif
+
     // special buttons
     if (sendpause) 
     { 
