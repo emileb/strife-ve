@@ -3,7 +3,7 @@
 extern "C"
 {
 
-#include "in_android.h"
+#include "game_interface.h"
 
 #include <signal.h>
 #include <stdlib.h>
@@ -22,11 +22,12 @@ extern "C"
 #include "i_system.h"
 #include "m_fixed.h"
 
+#ifdef __ANDROID__
 #include <android/log.h>
-//#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO,"JNI", __VA_ARGS__))
-//#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "JNI", __VA_ARGS__))
-//#define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR,"JNI", __VA_ARGS__))
-
+#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO,"JNI", __VA_ARGS__))
+#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "JNI", __VA_ARGS__))
+#define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR,"JNI", __VA_ARGS__))
+#endif
 
 
 // FIFO STUFF ////////////////////
@@ -361,12 +362,9 @@ void PortableMouse(float dx,float dy)
 
 extern "C"
 {
-
-extern int SDL_SendMouseButton(SDL_Window * window, Uint8 state, Uint8 button);
-/* Send a mouse motion event */
-extern int SDL_SendMouseMotion(SDL_Window * window, int relative, int x, int y);
-
+extern int SDL_SendMouseButton(SDL_Window * window, Uint32 mouseID, Uint8 state, Uint8 button);
 }
+
 int absx=0,absy=0;
 void PortableMouseAbs(float x,float y)
 {
@@ -381,7 +379,7 @@ void PortableMouseButton(int state, int buttons)
 {
     LOGI("PortableMouseButton %d %d",state,buttons);
    // SDL_SendMouseMotion(NULL,1,absx,absy);
-	SDL_SendMouseButton(NULL,state,buttons);
+	SDL_SendMouseButton(NULL,0,state,buttons);
 }
 // =================== FORWARD and SIDE MOVMENT ==============
 

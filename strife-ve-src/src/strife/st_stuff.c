@@ -735,8 +735,6 @@ boolean ST_Responder(event_t* ev)
     else if ((ev->data1 >= key_invslot0) && (ev->data1 <= key_invslot5))
     {
         int slot = ev->data1 - key_invslot0;
-        LOGI("SLOT %d", slot);
-
         if( slot < plyr->numinventory )
             plyr->inventorycursor = slot;
 

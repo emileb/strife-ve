@@ -6,19 +6,19 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := choc-doom
 
 
-LOCAL_CFLAGS :=  -O2 -g -Wdeclaration-after-statement -D__MOBILE__ -D_GNU_SOURCE=1 -D_REENTRANT -DUSE_GLES -DHAVE_JWZGLES
+LOCAL_CFLAGS :=  -O0 -g -Wdeclaration-after-statement -D__MOBILE__ -DSDL2_COMPAT -D_GNU_SOURCE=1 -D_REENTRANT -DUSE_GLES -DHAVE_JWZGLES
 
 LOCAL_LDLIBS += -lGLESv1_CM -lEGL
 
 LOCAL_LDLIBS += -llog -lz
 
-LOCAL_C_INCLUDES +=   $(LOCAL_PATH)/../textscreen $(LOCAL_PATH)/../pcsound $(LOCAL_PATH)/../opl  $(LOCAL_PATH)/android $(LOCAL_PATH)/strife $(LOCAL_PATH)/opengl
-LOCAL_C_INCLUDES +=  $(TOP_DIR)/SDL/include $(TOP_DIR)/SDL_net/include $(TOP_DIR)/SDL_mixer  $(TOP_DIR)/MobileTouchControls $(TOP_DIR)/MobileTouchControls/libpng $(TOP_DIR)/  $(TOP_DIR)/ffmpeg/include
+LOCAL_C_INCLUDES +=   $(LOCAL_PATH)/../textscreen $(LOCAL_PATH)/../pcsound $(LOCAL_PATH)/../opl  $(LOCAL_PATH)/mobile $(LOCAL_PATH)/strife $(LOCAL_PATH)/opengl
+LOCAL_C_INCLUDES +=  $(TOP_DIR)/SDL2-2.0.5/include $(TOP_DIR)/SDL2_net $(TOP_DIR)/SDL2_mixer  $(TOP_DIR)/MobileTouchControls $(TOP_DIR)/MobileTouchControls/libpng $(TOP_DIR)/  $(TOP_DIR)/ffmpeg/include
 
  
  ANDROID_FILES = \
-       android/android-jni.cpp \
-       android/in_android.cpp \
+       mobile/android-jni.cpp \
+       mobile/game_interface.cpp \
 
 
           #i_cdmus.c            i_cdmus.h             \
@@ -266,9 +266,9 @@ LOCAL_LDLIBS += -fuse-ld=bfd
 
 LOCAL_DISABLE_FATAL_LINKER_WARNINGS=true
 
-LOCAL_STATIC_LIBRARIES += s-setup lz textscreen_choc opl_choc pcsound_choc  SDL_net libjpeg libpng jwzgles
+LOCAL_STATIC_LIBRARIES += s-setup lz textscreen_choc opl_choc pcsound_choc  SDL2_net libjpeg libpng jwzgles
 LOCAL_STATIC_LIBRARIES +=  libavformat libavcodec  libavfilter libavutil libavdevice libavfilter libswresample libswscale libx264
-LOCAL_SHARED_LIBRARIES := touchcontrols SDL SDL_mixer SDL_image
+LOCAL_SHARED_LIBRARIES := touchcontrols SDL2 SDL2_mixer
 
 include $(BUILD_SHARED_LIBRARY)
 

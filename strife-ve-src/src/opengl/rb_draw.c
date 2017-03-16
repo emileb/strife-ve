@@ -407,7 +407,6 @@ void RB_DrawTextureForName(const char *pic, const float x, const float y,
 
 void RB_DrawScreenTexture(rbTexture_t *texture, const int width, const int height)
 {
-    LOGI("RB_DrawScreenTexture");
     vtx_t v[4];
     float tx,ty;
     int i;
@@ -485,7 +484,6 @@ void RB_DrawScreenTexture(rbTexture_t *texture, const int width, const int heigh
 
 void RB_DrawStretchPic(const char *pic, const float x, const float y, const int width, const int height)
 {
-    LOGI("RB_DrawStretchPic");
     rbTexture_t *texture;
     vtx_t v[4];
     
@@ -1142,6 +1140,7 @@ void RB_DrawDamageMarkers(player_t *player)
 
 void RB_RenderFXAA(void)
 {
+#ifdef HAS_SHADER
     if(!has_GL_ARB_shader_objects       ||
        !has_GL_ARB_framebuffer_object   ||
        !rbEnableFXAA)
@@ -1164,6 +1163,7 @@ void RB_RenderFXAA(void)
 
     FBO_Draw(&fxaaFBO, true);
     RB_DisableShaders();
+#endif
 }
 
 //
@@ -1172,6 +1172,7 @@ void RB_RenderFXAA(void)
 
 void RB_RenderBloom(void)
 {
+#ifdef HAS_SHADER
     static float bloomThreshold;
     int i, w, h;
     short threshold;
@@ -1287,6 +1288,7 @@ void RB_RenderBloom(void)
     FBO_Draw(&bloomFBO, true);
 
     dglPopAttrib();
+#endif
 }
 
 //
@@ -1295,6 +1297,7 @@ void RB_RenderBloom(void)
 
 void RB_RenderMotionBlur(void)
 {
+#ifdef HAS_SHADER
     matrix inverseMat;
     matrix motionMat;
     vtx_t v[4];
@@ -1423,6 +1426,7 @@ void RB_RenderMotionBlur(void)
     RB_SetState(GLSTATE_TEXTURE1, false);
     RB_SetTextureUnit(0);
     RB_DisableShaders();
+#endif
 }
 
 //=============================================================================
@@ -1472,9 +1476,10 @@ static void RB_DrawSprites(void)
 
 static void RB_FixSpriteClippingPreProcess(void)
 {
+#ifdef HAS_FBO
     // bind framebuffer
     FBO_Bind(&spriteFBO);
-
+#endif
     // clear everything, including alpha
     dglClearColor(0, 0, 0, 0);
     RB_ClearBuffer(GLCB_ALL);
@@ -1501,9 +1506,10 @@ static void RB_FixSpriteClippingPreProcess(void)
     RB_SetDepth(GLFUNC_LEQUAL);
     
     DL_ProcessDrawList(DLT_TRANSWALL);
-
+#ifdef HAS_FBO
     // unbind framebuffer
     FBO_UnBind(&spriteFBO);
+#endif
 }
 
 //

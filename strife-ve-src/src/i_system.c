@@ -346,6 +346,13 @@ static int ZenityErrorBox(char *message)
 
 static boolean already_quitting = false;
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO,"JNI", __VA_ARGS__))
+#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "JNI", __VA_ARGS__))
+#define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR,"JNI", __VA_ARGS__))
+#endif
+
 void I_Error (char *error, ...)
 {
     char msgbuf[512];

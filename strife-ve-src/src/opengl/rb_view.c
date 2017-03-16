@@ -426,7 +426,9 @@ void RB_RenderPlayerView(player_t *player)
     if(rbFixSpriteClipping && has_GL_ARB_framebuffer_object)
     {
         RB_SetBlend(GLSRC_ONE, GLDST_ONE_MINUS_SRC_ALPHA);
+#ifdef HAS_FBO
         FBO_Draw(&spriteFBO, false);
+#endif
     }
 
     // render player weapons

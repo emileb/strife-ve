@@ -155,7 +155,7 @@ int M_ReadFile(char *name, byte **buffer)
     // reading the current position
 
     length = M_FileLength(handle);
-    LOGI("len = %d",length);
+
     buf = Z_Malloc (length, PU_STATIC, NULL);
     count = fread(buf, 1, length, handle);
     fclose (handle);

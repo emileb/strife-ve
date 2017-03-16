@@ -5,7 +5,7 @@
 #include <android/log.h>
 #include <unistd.h>
 
-#include "SDL_android_extra.h"
+#include "SDL_beloko_extra.h"
 
 #ifdef ANTI_HACK
 #include "s-setup/s-setup.h"
@@ -21,7 +21,7 @@ extern "C"
 {
 
 
-#include "in_android.h"
+#include "game_interface.h"
 #include "SDL_keycode.h"
 
 #undef LOGI
@@ -32,7 +32,8 @@ extern "C"
 #define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "JNI", __VA_ARGS__))
 #define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR,"JNI", __VA_ARGS__))
 
-#define JAVA_FUNC(x) Java_com_beloko_opengames_chocdoom_NativeLib_##x
+//#define JAVA_FUNC(x) Java_com_beloko_opengames_chocdoom_NativeLib_##x
+#define JAVA_FUNC(x) Java_org_libsdl_app_NativeLib_##x
 
     int android_screen_width;
     int android_screen_height;
@@ -472,7 +473,7 @@ extern "C"
             tcYesNo = new touchcontrols::TouchControls( "yes_no", false, false );
 
             // Back button
-            tcBackButton->addControl( new touchcontrols::Button( "back_button", touchcontrols::RectF( 0, 0, 2, 2 ), "ui_back_arrow", PORT_ACT_MENU_BACK ) );
+            tcBackButton->addControl( new touchcontrols::Button( "back_button", touchcontrols::RectF( 0, 0, 8, 8 ), "ui_back_arrow", PORT_ACT_MENU_BACK ) );
             //tcBackButton->setPassThroughTouch( false ); //Stop touch going to the mouse on the menu
             tcBackButton->signal_button.connect( sigc::ptr_fun( &backButton ) );
 
@@ -591,8 +592,6 @@ extern "C"
         {
             LOGI( "NOT creating controls" );
         }
-
-        controlsContainer.initGL();
     }
 
     void updateTouchScreenMode( touchscreemode_t mode )
@@ -683,12 +682,19 @@ extern "C"
     int inAutomapLast = 0;
     void frameControls()
     {
+        static bool glInit = false;
+        if(!glInit)
+        {
+           controlsContainer.initGL();
+           glInit = true;
+        }
+
         updateTouchScreenMode( PortableGetScreenMode() );
 
         setHideSticks( !showSticks );
         controlsContainer.draw();
 
-        swapBuffers();
+        //swapBuffers();
 
         //glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         //glClear(GL_COLOR_BUFFER_BIT);
@@ -782,7 +788,7 @@ extern "C"
 
         env_ = env;
 
-        Android_SetGameResolution( 320, 240 );
+        //Android_SetGameResolution( 320, 240 );
 
         argv[0] = "Strife";
         int argCount = ( env )->GetArrayLength( argsArray );
@@ -817,7 +823,7 @@ extern "C"
         SDL_SetSwapBufferCallBack( frameControls );
 
         //Now done in java to keep context etc
-        SDL_SwapBufferPerformsSwap( false );
+        //SDL_SwapBufferPerformsSwap( false );
 
         PortableInit( argc, argv ); //Never returns!!
 
