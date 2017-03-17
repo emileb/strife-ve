@@ -13,7 +13,7 @@ LOCAL_LDLIBS += -lGLESv1_CM -lEGL
 LOCAL_LDLIBS += -llog -lz
 
 LOCAL_C_INCLUDES +=  $(LOCAL_PATH)/../textscreen $(LOCAL_PATH)/../pcsound $(LOCAL_PATH)/../opl  $(LOCAL_PATH)/mobile $(LOCAL_PATH)/strife $(LOCAL_PATH)/opengl
-LOCAL_C_INCLUDES +=  $(SDL_INCLUDE_PATHS) $(TOP_DIR)/. $(TOP_DIR)/MobileTouchControls $(TOP_DIR)/MobileTouchControls/libpng $(TOP_DIR)/Libs_OpenTouch
+LOCAL_C_INCLUDES +=  $(SDL_INCLUDE_PATHS) $(TOP_DIR)/. $(TOP_DIR)/MobileTouchControls $(TOP_DIR)/MobileTouchControls/libpng $(TOP_DIR)/Clibs_OpenTouch
 
  
  ANDROID_FILES = \

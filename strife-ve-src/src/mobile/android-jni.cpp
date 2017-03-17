@@ -17,6 +17,8 @@
 #include "UI_TouchDefaultSettings.h"
 
 
+#include "port_act_defs.h"
+
 extern "C"
 {
 
