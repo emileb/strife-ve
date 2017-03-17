@@ -473,7 +473,7 @@ extern "C"
             tcYesNo = new touchcontrols::TouchControls( "yes_no", false, false );
 
             // Back button
-            tcBackButton->addControl( new touchcontrols::Button( "back_button", touchcontrols::RectF( 0, 0, 8, 8 ), "ui_back_arrow", PORT_ACT_MENU_BACK ) );
+            tcBackButton->addControl( new touchcontrols::Button( "back_button", touchcontrols::RectF( 0, 0, 2, 2 ), "ui_back_arrow", PORT_ACT_MENU_BACK ) );
             //tcBackButton->setPassThroughTouch( false ); //Stop touch going to the mouse on the menu
             tcBackButton->signal_button.connect( sigc::ptr_fun( &backButton ) );
 

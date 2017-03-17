@@ -12,11 +12,7 @@ LOCAL_LDLIBS += -lGLESv1_CM -lEGL
 
 LOCAL_LDLIBS += -llog
 
-LOCAL_CFLAGS += -march=armv7-a -mfloat-abi=softfp
-LOCAL_LDLIBS += -Wl,--fix-cortex-a8
-
-
-LOCAL_C_INCLUDES :=  $(TOP_DIR)/SDL2-2.0.5/include  $(TOP_DIR)/SDL2_mixer $(TOP_DIR)/libpng $(TOP_DIR)/jpeg8d $(TOP_DIR)/TouchControls  $(TOP_DIR)/TinyXML $(TOP_DIR)/
+LOCAL_C_INCLUDES :=  $(SDL_INCLUDE_PATHS)
 LOCAL_C_INCLUDES +=  $(LOCAL_PATH)/../src $(LOCAL_PATH)/../src/mobile
 
 libopl_a_SOURCES = \

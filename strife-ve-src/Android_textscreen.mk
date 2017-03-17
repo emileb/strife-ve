@@ -6,15 +6,11 @@ include $(CLEAR_VARS)
 LOCAL_MODULE    := textscreen_choc
 
 
-LOCAL_CFLAGS :=  -O2 -g -Wall -Wdeclaration-after-statement  -D_GNU_SOURCE=1 -D_REENTRANT
+LOCAL_CFLAGS :=  -O2 -g -DSDL2_COMPAT -Wall -Wdeclaration-after-statement  -D_GNU_SOURCE=1 -D_REENTRANT
 
 LOCAL_LDLIBS += -lGLESv1_CM -lEGL
 
 LOCAL_LDLIBS += -llog
-
-LOCAL_CFLAGS += -march=armv7-a -mfloat-abi=softfp
-LOCAL_LDLIBS += -Wl,--fix-cortex-a8
-
 
 LOCAL_C_INCLUDES :=  $(TOP_DIR)/SDL/include  $(TOP_DIR)/libpng $(TOP_DIR)/jpeg8d $(TOP_DIR)/TouchControls  $(TOP_DIR)/TinyXML $(TOP_DIR)/
 LOCAL_C_INCLUDES +=  $(LOCAL_PATH)/../src

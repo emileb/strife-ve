@@ -1395,8 +1395,10 @@ static void D_InitFrontend()
         // [SVE] svillarreal - play nightdive and strife intro movies
         if(!d_skipmovies)
         {
+#ifndef __MOBILE__
             I_AVStartVideoStream("movies/NightDive.ogv");
             I_AVStartVideoStream("movies/Strife.ogv");
+#endif
         }
 
         FE_StartFrontend(); // returns when user starts the game

@@ -3,7 +3,7 @@ LOCAL_PATH := $(call my-dir)/src/
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE    := choc-doom
+LOCAL_MODULE    := strife
 
 
 LOCAL_CFLAGS :=  -O0 -g -Wdeclaration-after-statement -D__MOBILE__ -DSDL2_COMPAT -D_GNU_SOURCE=1 -D_REENTRANT -DUSE_GLES -DHAVE_JWZGLES
@@ -12,8 +12,8 @@ LOCAL_LDLIBS += -lGLESv1_CM -lEGL
 
 LOCAL_LDLIBS += -llog -lz
 
-LOCAL_C_INCLUDES +=   $(LOCAL_PATH)/../textscreen $(LOCAL_PATH)/../pcsound $(LOCAL_PATH)/../opl  $(LOCAL_PATH)/mobile $(LOCAL_PATH)/strife $(LOCAL_PATH)/opengl
-LOCAL_C_INCLUDES +=  $(TOP_DIR)/SDL2-2.0.5/include $(TOP_DIR)/SDL2_net $(TOP_DIR)/SDL2_mixer  $(TOP_DIR)/MobileTouchControls $(TOP_DIR)/MobileTouchControls/libpng $(TOP_DIR)/  $(TOP_DIR)/ffmpeg/include
+LOCAL_C_INCLUDES +=  $(LOCAL_PATH)/../textscreen $(LOCAL_PATH)/../pcsound $(LOCAL_PATH)/../opl  $(LOCAL_PATH)/mobile $(LOCAL_PATH)/strife $(LOCAL_PATH)/opengl
+LOCAL_C_INCLUDES +=  $(SDL_INCLUDE_PATHS) $(TOP_DIR)/. $(TOP_DIR)/MobileTouchControls $(TOP_DIR)/MobileTouchControls/libpng $(TOP_DIR)/Libs_OpenTouch
 
  
  ANDROID_FILES = \
@@ -54,7 +54,6 @@ i_sound.c            i_sound.h             \
 i_timer.c            i_timer.h             \
 i_videohr.c          i_videohr.h           \
 i_glscale.c                                \
-i_ffmpeg.c \
 i_social.c \
 i_noappservices.c \
 kerning.c \
@@ -238,36 +237,13 @@ z_native.c           z_zone.h
 LOCAL_SRC_FILES = $(ANDROID_FILES) $(OPENGL_SOURCE_FILES) $(STRIFE_SOURCE_FILES) $(STRIFE_DEHACKED_SOURCE_FILES)  $(COMMON_SOURCE_FILES) $(GAME_SOURCE_FILES) \
 	$(FEATURE_MULTIPLAYER_SOURCE_FILES) $(FEATURE_WAD_MERGE_SOURCE_FILES) $(FEATURE_SOUND_SOURCE_FILES) \
  	$(FEATURE_DEHACKED_SOURCE_FILES)
- 
-ifeq ($(G),DOOM)
-LOCAL_STATIC_LIBRARIES += doom
-LOCAL_SRC_FILES += $(FEATURE_DEHACKED_SOURCE_FILES)
-LOCAL_CFLAGS += -DCHOC_DOOM
-
-else ifeq ($(G),CHOC_HEX)
-LOCAL_STATIC_LIBRARIES += hexen
-LOCAL_CFLAGS += -DCHOC_HEXEN
-ifeq ($(BUILD_SERIAL),1)
-LOCAL_CFLAGS += -DANTI_HACK 
-endif
-else ifeq ($(G),CHOC_HERETIC)
-LOCAL_STATIC_LIBRARIES += heretic
-LOCAL_SRC_FILES += $(FEATURE_DEHACKED_SOURCE_FILES)
-LOCAL_CFLAGS += -DCHOC_HERETIC
-else ifeq ($(G),CHOC_STRIFE)
-LOCAL_STATIC_LIBRARIES += strife
-LOCAL_SRC_FILES += $(FEATURE_DEHACKED_SOURCE_FILES)
-LOCAL_CFLAGS += -DCHOC_STRIFE
-endif 
- 
-#LOCAL_SRC_FILES = $(ANDROID_FILES) $(COMMON_SOURCE_FILES) $(SETUP_FILES) 
 
 LOCAL_LDLIBS += -fuse-ld=bfd
 
 LOCAL_DISABLE_FATAL_LINKER_WARNINGS=true
 
-LOCAL_STATIC_LIBRARIES += s-setup lz textscreen_choc opl_choc pcsound_choc  SDL2_net libjpeg libpng jwzgles
-LOCAL_STATIC_LIBRARIES +=  libavformat libavcodec  libavfilter libavutil libavdevice libavfilter libswresample libswscale libx264
+LOCAL_STATIC_LIBRARIES +=   textscreen_choc opl_choc pcsound_choc  SDL2_net libpng
+LOCAL_STATIC_LIBRARIES +=  jwzgles
 LOCAL_SHARED_LIBRARIES := touchcontrols SDL2 SDL2_mixer
 
 include $(BUILD_SHARED_LIBRARY)
